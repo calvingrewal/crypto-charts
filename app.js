@@ -22,9 +22,10 @@ app.get('/', async (req, res) => {
   
   fs.readFile(filename, 'utf8', (err, data) => {
     const prices = data.length ? JSON.parse(data) : {}
-    const currentDate = Date.now()
-
-    prices[currentDate] = newPrices //prices is now up to date
+    const currentDate = new Date()
+    const formattedDate = (currentDate.getMonth() + 1) + '/' + currentDate.getDate() + '/' +  currentDate.getFullYear()
+    
+    prices[formattedDate] = newPrices //prices is now up to date
 
     res.json(prices)
 
