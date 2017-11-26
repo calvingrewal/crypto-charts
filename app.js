@@ -1,9 +1,10 @@
 const express = require('express')
 const fs = require('fs')
 const fetch = require('node-fetch')
-const filename = 'data.json'
 
+const filename = 'data.json'
 const coins = ['btc', 'eth', 'neo', 'dash']
+
 const app = express()
 
 app.get('/', async (req, res) => {
@@ -20,20 +21,19 @@ app.get('/', async (req, res) => {
   
   fs.readFile(filename, 'utf8', (err, data) => {
     const prices = data.length ? JSON.parse(data) : {}
+
     const currentDate = new Date()
     const formattedDate = (currentDate.getMonth() + 1) + '/' + currentDate.getDate() + '/' +  currentDate.getFullYear()
     
-    prices[formattedDate] = newPrices //prices is now up to date
+    prices[formattedDate] = newPrices
 
     res.json(prices)
 
     const json = JSON.stringify(prices)
     fs.writeFile(filename, json, 'utf8', (err, data) => {
-        if (err) console.log('error writing to tweets json', err)
+        if (err) console.log('error writing to data.json', err)
     })
-
   })
-
 })
 
 app.listen(3000, () => {
