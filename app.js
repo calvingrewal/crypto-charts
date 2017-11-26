@@ -7,7 +7,7 @@ const coins = ['btc', 'eth', 'neo', 'dash']
 const app = express()
 
 app.get('/', async (req, res) => {
-  const prices = {}
+  const newPrices = {}
   
   for (let i=0; i<coins.length; i++) {
     const coin = coins[i]
@@ -17,15 +17,24 @@ app.get('/', async (req, res) => {
     
     const lastPrice = data.result[0].Last
     console.log(lastPrice)
-    prices[coin] = lastPrice
+    newPrices[coin] = lastPrice
   }
   
-  res.json(prices)
+  fs.readFile(filename, 'utf8', (err, data) => {
+    const prices = data.length ? JSON.parse(data) : {}
+    const currentDate = Date.now()
 
-  const json = JSON.stringify(prices)
-  fs.writeFile(filename, json, 'utf8', (err, data) => {
-      if (err) console.log('error writing to tweets json', err)
+    prices[currentDate] = newPrices //prices is now up to date
+
+    res.json(prices)
+
+    const json = JSON.stringify(prices)
+    fs.writeFile(filename, json, 'utf8', (err, data) => {
+        if (err) console.log('error writing to tweets json', err)
+    })
+
   })
+
 })
 
 app.listen(3000, () => {
