@@ -15,9 +15,7 @@ app.get('/', async (req, res) => {
     const raw = await fetch('https://bittrex.com/api/v1.1/public/getmarketsummary?market=usdt-'+coin)
     const data = await raw.json()
     
-    const lastPrice = data.result[0].Last
-    console.log(lastPrice)
-    newPrices[coin] = lastPrice
+    newPrices[coin] = data.result[0]
   }
   
   fs.readFile(filename, 'utf8', (err, data) => {
